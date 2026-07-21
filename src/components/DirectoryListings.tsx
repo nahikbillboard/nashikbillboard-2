@@ -165,38 +165,7 @@ export default function DirectoryListings({
                     referrerPolicy="no-referrer"
                   />
 
-                  {/* Hoverable Specifications Overlay */}
-                  <div className="absolute inset-0 bg-black/75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-3.5 text-white z-10">
-                    <div className="space-y-2">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-indigo-400 border-b border-white/15 pb-1">Billboard Specs</p>
-                      <div className="grid grid-cols-2 gap-y-1.5 gap-x-1 text-[10px]">
-                        <div>
-                          <span className="text-gray-400 block">Size:</span>
-                          <span className="font-semibold">{b.size}</span>
-                        </div>
-                        <div>
-                          <span className="text-gray-400 block">Traffic:</span>
-                          <span className="font-semibold text-emerald-400">{(b.viewsPerDay / 1000).toFixed(0)}k/day</span>
-                        </div>
-                        <div>
-                          <span className="text-gray-400 block">Lighting:</span>
-                          <span className="font-semibold truncate block">{b.lighting}</span>
-                        </div>
-                        <div>
-                          <span className="text-gray-400 block">Status:</span>
-                          <span className={`font-semibold ${
-                            b.availability === 'Available' ? 'text-emerald-400' :
-                            b.availability === 'Fast Filling' ? 'text-amber-400' :
-                            'text-red-400'
-                          }`}>{b.availability}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-[9px] text-gray-400 flex items-center gap-1">
-                      <Info size={10} className="text-indigo-400" />
-                      Hover to view details
-                    </div>
-                  </div>
+
 
                   {/* Left & Right Overlapping Navigation Arrows (Justdial Style) */}
                   {b.images.length > 1 && (

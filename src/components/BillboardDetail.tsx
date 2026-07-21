@@ -306,10 +306,10 @@ export default function BillboardDetail({ billboard, onBack, onEnquire }: Billbo
                   Popular Services
                 </h3>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                <div className="space-y-4 pt-2">
                   {/* Photo Visual block */}
                   <div className="space-y-2">
-                    <div className="aspect-video rounded-xl overflow-hidden border border-gray-200 relative bg-slate-100">
+                    <div className="aspect-video max-h-[380px] rounded-xl overflow-hidden border border-gray-200 relative bg-slate-100">
                       <img 
                         src={billboard.images[0]} 
                         alt="Outdoor Hoarding Display" 
@@ -321,42 +321,6 @@ export default function BillboardDetail({ billboard, onBack, onEnquire }: Billbo
                       </div>
                     </div>
                     <p className="text-xs text-gray-400 italic">High visibility branding display situated at prime junction.</p>
-                  </div>
-
-                  {/* Reach details bullet list */}
-                  <div className="space-y-3">
-                    <h4 className="font-bold text-gray-800 text-[14px] flex items-center gap-1.5">
-                      <Award size={15} className="text-amber-500" />
-                      Campaign Key Metrics
-                    </h4>
-                    <div className="space-y-2 text-xs">
-                      <div className="flex justify-between py-1 border-b border-gray-50">
-                        <span className="text-gray-500">Lighting Type:</span>
-                        <span className="font-bold text-gray-800">{billboard.lighting}</span>
-                      </div>
-                      <div className="flex justify-between py-1 border-b border-gray-50">
-                        <span className="text-gray-500">Hoarding Size:</span>
-                        <span className="font-bold text-gray-800">{billboard.size}</span>
-                      </div>
-                      <div className="flex justify-between py-1 border-b border-gray-50">
-                        <span className="text-gray-500">Structure Class:</span>
-                        <span className="font-bold text-gray-800">{billboard.type}</span>
-                      </div>
-                      <div className="flex justify-between py-1 border-b border-gray-50">
-                        <span className="text-gray-500">Audience Views:</span>
-                        <span className="font-bold text-emerald-600">{formattedViews} / Day</span>
-                      </div>
-                      <div className="flex justify-between py-1">
-                        <span className="text-gray-500">Booking Status:</span>
-                        <span className={`font-bold px-1.5 py-0.5 rounded text-[10px] ${
-                          billboard.availability === 'Available' || billboard.availability === 'Fast Filling'
-                            ? 'bg-emerald-50 text-emerald-700'
-                            : 'bg-amber-50 text-amber-700'
-                        }`}>
-                          {billboard.availability}
-                        </span>
-                      </div>
-                    </div>
                   </div>
                 </div>
 

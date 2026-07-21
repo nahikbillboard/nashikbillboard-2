@@ -295,5 +295,7 @@ export const NASHIK_AREAS = [
   'Panchavati',
   'Satpur',
   'Nashik Road',
-  'Pathardi Phata'
+  'Pathardi Phata',
+  'Nshik Road',
+
 ];

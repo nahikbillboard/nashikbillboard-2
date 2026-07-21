@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Billboard, Booking, Inquiry } from './types';
 import { NASHIK_BILLBOARDS, NASHIK_AREAS } from './data/billboards';
 import DirectoryListings from './components/DirectoryListings';
@@ -23,7 +23,9 @@ import {
   Info, 
   CloudSun,
   FileText,
-  Briefcase
+  Briefcase,
+  Menu,
+  X
 } from 'lucide-react';
 
 export default function App() {
@@ -58,6 +60,43 @@ export default function App() {
   // Filtering States
   const [selectedArea, setSelectedArea] = useState<string>('All Areas');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchOpen, setSearchOpen] = useState<boolean>(false);
+
+  // Drawer & Advanced Filter States
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [filterBillboardType, setFilterBillboardType] = useState<string>('All');
+  const [filterLighting, setFilterLighting] = useState<string>('All');
+  const [filterAvailability, setFilterAvailability] = useState<string>('All');
+  const [sortByPrice, setSortByPrice] = useState<string>('');
+
+  // Dynamic pre-filtering of billboards array based on Advanced Drawer Filters
+  const filteredAndSortedBillboards = useMemo(() => {
+    let result = [...billboards];
+
+    // Filter by type
+    if (filterBillboardType !== 'All') {
+      result = result.filter(b => b.type === filterBillboardType);
+    }
+
+    // Filter by lighting
+    if (filterLighting !== 'All') {
+      result = result.filter(b => b.lighting === filterLighting);
+    }
+
+    // Filter by availability
+    if (filterAvailability !== 'All') {
+      result = result.filter(b => b.availability === filterAvailability);
+    }
+
+    // Sort by price per month
+    if (sortByPrice === 'low-to-high') {
+      result.sort((a, b) => a.pricePerMonth - b.pricePerMonth);
+    } else if (sortByPrice === 'high-to-low') {
+      result.sort((a, b) => b.pricePerMonth - a.pricePerMonth);
+    }
+
+    return result;
+  }, [billboards, filterBillboardType, filterLighting, filterAvailability, sortByPrice]);
 
   // Booking Modal State
   const [selectedBillboardForBooking, setSelectedBillboardForBooking] = useState<Billboard | null>(null);
@@ -246,54 +285,291 @@ export default function App() {
       
       {/* 1. APP HEADER BAR (Justdial / Modern HUD hybrid look) */}
       <header id="app-main-header" className="bg-white border-b border-gray-150 sticky top-0 z-30 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           
-          {/* Logo Brand Title */}
-          <div className="flex items-center gap-3">
+          {/* Left Side: 3-line Menu Button + Logo */}
+          <div className="flex items-center gap-3 shrink-0">
+            {/* 3 lines menu button */}
+            <button
+              id="menu-toggle-button"
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              className="p-2 -ml-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-slate-100 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+              aria-label="Open Filter Drawer"
+            >
+              <Menu size={24} />
+            </button>
+
+            {/* Logo Brand Title */}
             <div className="flex items-center">
               <img 
                 src="https://lh3.googleusercontent.com/d/1xZvEvejzlcEV1ciWd2xpgJAWVuuWdLqq"
                 alt="Brand Logo"
-                className="h-12 w-auto object-contain max-w-[240px]"
+                className="h-10 sm:h-12 w-auto object-contain max-w-[180px] sm:max-w-[240px]"
                 referrerPolicy="no-referrer"
               />
             </div>
           </div>
 
-          {/* Header section metadata widgets removed */}
+          {/* Search Toggle Icon Button directly to the right of the logo */}
+          <div id="header-search-container" className="flex-1 flex items-center justify-start">
+            <button
+              type="button"
+              onClick={() => setSearchOpen(!searchOpen)}
+              className="p-2.5 rounded-full border border-indigo-100 bg-indigo-50/45 text-indigo-600 hover:bg-indigo-50/80 hover:scale-105 active:scale-95 transition-all flex items-center justify-center shadow-3xs relative"
+              title="Search Billboards"
+              aria-label="Toggle Search Box"
+            >
+              <Search size={18} className="stroke-[2.5]" />
+              {searchQuery && (
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-indigo-600 rounded-full border border-white" />
+              )}
+            </button>
+
+            {/* Quick search query info badge next to search icon for instant visibility */}
+            {searchQuery && (
+              <span className="ml-2.5 hidden md:inline-flex items-center gap-1.5 bg-indigo-50 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full border border-indigo-100">
+                <span>🔍 "{searchQuery}"</span>
+                <button 
+                  onClick={() => setSearchQuery('')}
+                  className="hover:text-red-500 text-[10px] font-sans font-black"
+                >
+                  ✕
+                </button>
+              </span>
+            )}
+          </div>
+
+          {/* Quick tab shortcuts for desktop screens */}
+          <div className="hidden lg:flex items-center gap-1.5 shrink-0">
+            {[
+              { id: 'directory', label: 'Directory' },
+              { id: 'map', label: 'Live Map' },
+              { id: 'bookings', label: 'Bookings' }
+            ].map((t) => (
+              <button
+                key={t.id}
+                onClick={() => setActiveTab(t.id as any)}
+                className={`text-xs px-3.5 py-1.5 rounded-full font-bold transition-all ${
+                  activeTab === t.id 
+                    ? 'bg-indigo-900 text-white shadow-xs' 
+                    : 'text-gray-600 hover:bg-slate-100 hover:text-gray-900'
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
 
         </div>
       </header>
 
-      {/* 2. SUB-BAR FILTERS (Search & Areas Ribbon) - ONLY visible on Dashboard Directory & Map */}
-      {(activeTab === 'directory' || activeTab === 'map') && !selectedBillboardId && (
-        <section id="filters-panel-subbar" className="bg-white border-b border-gray-150 py-3 px-4">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
-            
-            {/* Left: Input Text Search */}
-            <div className="relative flex-1 max-w-lg">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+      {/* FLOATING SEARCH BAR OVERLAY */}
+      {searchOpen && (
+        <div 
+          id="floating-search-overlay" 
+          className="fixed inset-x-0 top-[65px] sm:top-[73px] z-40 bg-white/95 backdrop-blur-md shadow-lg border-b border-indigo-100 animate-in slide-in-from-top duration-300 ease-out"
+        >
+          <div className="max-w-3xl mx-auto px-4 py-4 flex items-center gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-indigo-600" size={18} />
               <input 
                 type="text"
-                placeholder="Search billboard names, agencies, sizes, or CIDCO/College Road..."
+                autoFocus
+                placeholder="Search by landmark, area road, size, agency or brand..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full text-sm border border-gray-200 rounded-full pl-10 pr-4 py-2 bg-slate-50 outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all placeholder:text-gray-400"
+                className="w-full text-xs sm:text-sm border border-indigo-150 rounded-full pl-11 pr-10 py-2.5 bg-slate-50/50 outline-none focus:ring-2 focus:ring-indigo-500/15 focus:border-indigo-500 focus:bg-white transition-all placeholder:text-gray-400"
               />
               {searchQuery && (
                 <button 
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-xs font-bold"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-xs font-bold"
                 >
                   Clear
                 </button>
               )}
             </div>
+            <button
+              type="button"
+              onClick={() => setSearchOpen(false)}
+              className="text-xs font-extrabold text-indigo-700 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-4 py-2.5 rounded-full transition-colors shrink-0"
+            >
+              Done
+            </button>
+          </div>
+        </div>
+      )}
 
-            {/* Right: Area Navigation scroll ribbon */}
-            <div className="flex items-center gap-2 overflow-x-auto py-1 scrollbar-none">
-              <span className="text-xs font-bold text-gray-500 uppercase tracking-wider shrink-0 hidden lg:inline">Areas:</span>
-              <div className="flex gap-1.5">
+      {/* FILTER DRAWER / SIDEBAR MENU OVERLAY */}
+      {menuOpen && (
+        <div id="filter-drawer-overlay" className="fixed inset-0 z-50 flex justify-start animate-in fade-in duration-200">
+          {/* Backdrop */}
+          <div 
+            onClick={() => setMenuOpen(false)}
+            className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity" 
+          />
+
+          {/* Drawer content panel */}
+          <div className="relative w-80 max-w-[85vw] bg-white h-full shadow-2xl flex flex-col animate-in slide-in-from-left duration-300 z-10">
+            {/* Drawer Header */}
+            <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-indigo-900 text-white">
+              <div className="flex items-center gap-2">
+                <Compass className="animate-spin-slow text-indigo-200" size={18} />
+                <h3 className="font-sans font-black text-base tracking-tight">Filters & Navigation</h3>
+              </div>
+              <button 
+                type="button"
+                onClick={() => setMenuOpen(false)}
+                className="p-1.5 rounded-lg bg-indigo-800 text-indigo-100 hover:text-white hover:bg-indigo-700 transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Drawer Body - Scrollable */}
+            <div className="flex-1 overflow-y-auto p-5 space-y-6">
+              
+              {/* Location Area Filter */}
+              <div className="space-y-2">
+                <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Nashik Area Selection</h4>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {NASHIK_AREAS.map((area) => (
+                    <button
+                      key={area}
+                      onClick={() => {
+                        setSelectedArea(area);
+                        setMenuOpen(false);
+                      }}
+                      className={`text-left text-[11px] font-semibold px-2.5 py-1.5 rounded-lg border transition-all ${
+                        selectedArea === area 
+                          ? 'bg-indigo-900 border-indigo-900 text-white' 
+                          : 'bg-slate-50 border-gray-150 text-gray-600 hover:bg-slate-100'
+                      }`}
+                    >
+                      {area}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Billboard Type Filter */}
+              <div className="space-y-2">
+                <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Billboard Format</h4>
+                <select
+                  value={filterBillboardType}
+                  onChange={(e) => setFilterBillboardType(e.target.value)}
+                  className="w-full text-xs border border-gray-200 bg-white rounded-lg px-2.5 py-2 outline-none focus:ring-1 focus:ring-indigo-500"
+                >
+                  <option value="All">All Formats</option>
+                  <option value="Classic Hoarding">Classic Hoarding</option>
+                  <option value="Digital LED">Digital LED</option>
+                  <option value="Unipole">Unipole</option>
+                  <option value="Gantry">Gantry</option>
+                  <option value="Bus Shelter">Bus Shelter</option>
+                </select>
+              </div>
+
+              {/* Lighting Technology Filter */}
+              <div className="space-y-2">
+                <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Lighting Technology</h4>
+                <select
+                  value={filterLighting}
+                  onChange={(e) => setFilterLighting(e.target.value)}
+                  className="w-full text-xs border border-gray-200 bg-white rounded-lg px-2.5 py-2 outline-none focus:ring-1 focus:ring-indigo-500"
+                >
+                  <option value="All">All Lighting Options</option>
+                  <option value="Lit (Front-lit)">Lit (Front-lit)</option>
+                  <option value="Lit (Back-lit)">Lit (Back-lit)</option>
+                  <option value="Non-Lit">Non-Lit</option>
+                  <option value="LED Digital Display">LED Digital Display</option>
+                </select>
+              </div>
+
+              {/* Campaign Availability Status Filter */}
+              <div className="space-y-2">
+                <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Availability Status</h4>
+                <div className="flex flex-wrap gap-1.5">
+                  {['All', 'Available', 'Fast Filling', 'Booked', 'Under Maintenance'].map((status) => (
+                    <button
+                      key={status}
+                      onClick={() => setFilterAvailability(status)}
+                      className={`text-[10px] font-bold px-2 py-1 rounded border transition-all ${
+                        filterAvailability === status
+                          ? 'bg-emerald-600 border-emerald-600 text-white'
+                          : 'bg-slate-50 border-gray-150 text-gray-600 hover:bg-slate-100'
+                      }`}
+                    >
+                      {status}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Rent Price Sorter */}
+              <div className="space-y-2">
+                <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Sort by Rent Rate</h4>
+                <div className="grid grid-cols-2 gap-1.5">
+                  <button
+                    onClick={() => setSortByPrice(sortByPrice === 'low-to-high' ? '' : 'low-to-high')}
+                    className={`text-[11px] font-bold py-1.5 px-2 rounded-lg border transition-all ${
+                      sortByPrice === 'low-to-high'
+                        ? 'bg-indigo-600 border-indigo-600 text-white'
+                        : 'bg-slate-50 border-gray-150 text-gray-500'
+                    }`}
+                  >
+                    📈 Low to High
+                  </button>
+                  <button
+                    onClick={() => setSortByPrice(sortByPrice === 'high-to-low' ? '' : 'high-to-low')}
+                    className={`text-[11px] font-bold py-1.5 px-2 rounded-lg border transition-all ${
+                      sortByPrice === 'high-to-low'
+                        ? 'bg-indigo-600 border-indigo-600 text-white'
+                        : 'bg-slate-50 border-gray-150 text-gray-500'
+                    }`}
+                  >
+                    📉 High to Low
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Drawer Footer with Clear Filters and Close */}
+            <div className="p-4 border-t border-gray-200 bg-slate-50 flex items-center gap-2">
+              <button
+                onClick={() => {
+                  setFilterBillboardType('All');
+                  setFilterLighting('All');
+                  setFilterAvailability('All');
+                  setSortByPrice('');
+                  setSelectedArea('All Areas');
+                  setSearchQuery('');
+                }}
+                className="flex-1 py-2 text-xs font-bold text-gray-600 hover:text-gray-900 hover:bg-slate-200 bg-slate-100 border border-gray-200 rounded-xl transition-all"
+              >
+                Clear Filters
+              </button>
+              <button
+                onClick={() => setMenuOpen(false)}
+                className="flex-1 py-2 text-xs font-bold text-white bg-indigo-900 hover:bg-indigo-800 rounded-xl shadow-xs transition-all"
+              >
+                Apply & Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 2. SUB-BAR FILTERS (Areas Ribbon Only) - ONLY visible on Dashboard Directory & Map */}
+      {(activeTab === 'directory' || activeTab === 'map') && !selectedBillboardId && (
+        <section id="filters-panel-subbar" className="bg-white border-b border-gray-150 py-3 px-4">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+            
+            {/* Area Navigation scroll ribbon */}
+            <div className="flex items-center gap-2 overflow-x-auto py-1 scrollbar-none w-full">
+              <span className="text-xs font-bold text-gray-500 uppercase tracking-wider shrink-0">Areas:</span>
+              <div className="flex gap-1.5 overflow-x-auto scrollbar-none py-0.5">
                 {NASHIK_AREAS.map((area) => (
                   <button
                     key={area}
@@ -463,7 +739,7 @@ export default function App() {
 
               {/* Directory listings cards with hoverable galleries */}
               <DirectoryListings 
-                billboards={billboards}
+                billboards={filteredAndSortedBillboards}
                 onBook={handleOpenBookingModal}
                 onEnquire={handleSendEnquiry}
                 selectedArea={selectedArea}
@@ -488,7 +764,7 @@ export default function App() {
             </div>
 
             <InteractiveMap 
-              billboards={billboards}
+              billboards={filteredAndSortedBillboards}
               onBook={handleOpenBookingModal}
               selectedArea={selectedArea}
               onSelectBillboard={(b) => {

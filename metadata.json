@@ -1,5 +1,5 @@
 {
-  "name": "Nashik Billboard Directory & Booking",
+  "name": "Find Billboards",
   "description": "Real-time directory, interactive map, navigation, and slot booking system for billboards in Nashik.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
