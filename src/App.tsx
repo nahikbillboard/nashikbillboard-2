@@ -6,6 +6,7 @@ import InteractiveMap from './components/InteractiveMap';
 import BookingModal from './components/BookingModal';
 import NavigationTab from './components/NavigationTab';
 import BillboardDetail from './components/BillboardDetail';
+import YSTechnologiesPage from './components/YSTechnologiesPage';
 import { 
   Building2, 
   Compass, 
@@ -30,7 +31,7 @@ import {
 
 export default function App() {
   // Navigation State
-  const [activeTab, setActiveTab] = useState<'directory' | 'map' | 'navigation' | 'bookings' | 'owner-hub'>('directory');
+  const [activeTab, setActiveTab] = useState<'directory' | 'map' | 'navigation' | 'bookings' | 'owner-hub' | 'ys-tech'>('directory');
   
   // App Data State (Synchronized across components)
   const [billboards, setBillboards] = useState<Billboard[]>(NASHIK_BILLBOARDS);
@@ -340,26 +341,7 @@ export default function App() {
             )}
           </div>
 
-          {/* Quick tab shortcuts for desktop screens */}
-          <div className="hidden lg:flex items-center gap-1.5 shrink-0">
-            {[
-              { id: 'directory', label: 'Directory' },
-              { id: 'map', label: 'Live Map' },
-              { id: 'bookings', label: 'Bookings' }
-            ].map((t) => (
-              <button
-                key={t.id}
-                onClick={() => setActiveTab(t.id as any)}
-                className={`text-xs px-3.5 py-1.5 rounded-full font-bold transition-all ${
-                  activeTab === t.id 
-                    ? 'bg-indigo-900 text-white shadow-xs' 
-                    : 'text-gray-600 hover:bg-slate-100 hover:text-gray-900'
-                }`}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
+
 
         </div>
       </header>
@@ -561,13 +543,13 @@ export default function App() {
         </div>
       )}
 
-      {/* 2. SUB-BAR FILTERS (Areas Ribbon Only) - ONLY visible on Dashboard Directory & Map */}
+      {/* 2. SUB-BAR FILTERS (Areas Ribbon & Digital and Hoarding Section) - ONLY visible on Dashboard Directory & Map */}
       {(activeTab === 'directory' || activeTab === 'map') && !selectedBillboardId && (
         <section id="filters-panel-subbar" className="bg-white border-b border-gray-150 py-3 px-4">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+          <div className="max-w-7xl mx-auto space-y-3">
             
             {/* Area Navigation scroll ribbon */}
-            <div className="flex items-center gap-2 overflow-x-auto py-1 scrollbar-none w-full">
+            <div className="flex items-center gap-2 overflow-x-auto py-1 scrollbar-none w-full border-b border-gray-100 pb-2.5">
               <span className="text-xs font-bold text-gray-500 uppercase tracking-wider shrink-0">Areas:</span>
               <div className="flex gap-1.5 overflow-x-auto scrollbar-none py-0.5">
                 {NASHIK_AREAS.map((area) => (
@@ -587,6 +569,37 @@ export default function App() {
               </div>
             </div>
 
+            {/* Digital and Hoarding Section */}
+            <div id="digital-and-hoarding-section" className="flex items-center gap-2 overflow-x-auto py-1 scrollbar-none w-full">
+              <span className="text-xs font-extrabold text-indigo-950 uppercase tracking-wider shrink-0 flex items-center gap-1">
+                Digital & Hoarding:
+              </span>
+              <div className="flex gap-2 overflow-x-auto scrollbar-none py-0.5">
+                {[
+                  { id: 'All', label: 'All Formats', icon: '🌐' },
+                  { id: 'Digital LED', label: 'Digital LED Screens', icon: '📺' },
+                  { id: 'Classic Hoarding', label: 'Classic Hoardings', icon: '🪧' },
+                  { id: 'Unipole', label: 'Unipole Displays', icon: '🏗️' },
+                  { id: 'Gantry', label: 'Gantry Hoardings', icon: '🛣️' },
+                  { id: 'Bus Shelter', label: 'Bus Shelters', icon: '🚏' },
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setFilterBillboardType(item.id)}
+                    className={`text-xs px-3.5 py-1.5 rounded-full font-semibold transition-all shrink-0 flex items-center gap-1.5 border cursor-pointer ${
+                      filterBillboardType === item.id 
+                        ? 'bg-indigo-600 border-indigo-600 text-white shadow-xs font-bold' 
+                        : 'bg-indigo-50/50 border-indigo-100 text-indigo-950 hover:bg-indigo-100 hover:border-indigo-200'
+                    }`}
+                  >
+                    <span>{item.icon}</span>
+                    <span>{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
           </div>
         </section>
       )}
@@ -596,7 +609,9 @@ export default function App() {
       {/* 4. MAIN CENTRAL CONTENT AREA */}
       <main id="app-main-content" className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
         
-        {selectedBillboardId ? (
+        {activeTab === 'ys-tech' ? (
+          <YSTechnologiesPage onBack={() => setActiveTab('directory')} />
+        ) : selectedBillboardId ? (
           (() => {
             const selectedB = billboards.find((item) => item.id === selectedBillboardId);
             if (!selectedB) return <p className="text-gray-500 font-sans p-4">Billboard not found</p>;
@@ -1143,7 +1158,22 @@ export default function App() {
       {/* 5. APP FOOTER */}
       <footer id="app-footer-credit" className="bg-white border-t border-gray-150 py-5 text-center text-xs text-gray-400">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© 2026 Nashik Billboard Hub. All listed hoardings are verified by respective agencies.</p>
+          <div className="text-left space-y-1">
+            <p>© 2026 Nashik Billboard Hub. All listed hoardings are verified by respective agencies.</p>
+            <p className="text-[11px] text-gray-500 font-medium">
+              Created & Developed by{' '}
+              <button 
+                onClick={() => {
+                  setSelectedBillboardId(null);
+                  setActiveTab('ys-tech');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="font-black text-indigo-600 hover:text-indigo-800 underline decoration-indigo-300 hover:decoration-indigo-600 cursor-pointer inline-flex items-center gap-1 bg-indigo-50 px-2 py-0.5 rounded transition-all"
+              >
+                YS Technologies
+              </button>
+            </p>
+          </div>
           <div className="flex gap-4">
             <span className="hover:text-indigo-600 cursor-pointer">Terms & Conditions</span>
             <span>•</span>
