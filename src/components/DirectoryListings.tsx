@@ -221,11 +221,21 @@ export default function DirectoryListings({
                         title="Click to view full photo, video, and detailed info"
                       >
                         <span>{b.name}</span>
+                        <img 
+                          src="https://lh3.googleusercontent.com/d/1Iv2Cd9wwW7TjNeDF23qtsEQITRWqTq1z" 
+                          alt="Trusted Badge" 
+                          className="h-[1em] w-auto object-contain inline-block shrink-0 shadow-3xs rounded-[3px] align-middle" 
+                          referrerPolicy="no-referrer"
+                          title="Trusted Partner"
+                        />
                         {b.verified && (
-                          <span className="inline-flex items-center gap-1 bg-[#107c10]/10 text-[#107c10] border border-[#107c10]/20 px-2 py-0.5 rounded-[4px] text-[11px] font-bold shrink-0 shadow-3xs" title="Verified Vendor">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#107c10]"></span>
-                            Verified
-                          </span>
+                          <img 
+                            src="https://lh3.googleusercontent.com/d/1GmQEj8fuI11LJvJHqhYxeLXPLL0Si--i" 
+                            alt="Verified Logo" 
+                            className="h-[1em] w-auto object-contain inline-block shrink-0 shadow-3xs rounded-[3px] align-middle" 
+                            referrerPolicy="no-referrer"
+                            title="Verified Listing"
+                          />
                         )}
                       </h3>
                     </div>

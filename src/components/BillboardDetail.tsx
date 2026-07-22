@@ -149,11 +149,27 @@ export default function BillboardDetail({ billboard, onBack, onEnquire }: Billbo
           <div className="flex-1 space-y-2.5">
             {/* Title with thumbs up icon in dark circle */}
             <div className="flex items-start sm:items-center gap-2 flex-wrap">
-              <div className="flex items-center justify-center bg-slate-800 text-white w-6 h-6 rounded-full shrink-0 shadow-3xs">
+              <div className="flex items-center justify-center bg-slate-800 text-white w-6 h-6 rounded-full shrink-0 shadow-3xs mt-1 sm:mt-0">
                 <span className="text-[11px]">👍</span>
               </div>
-              <h1 className="font-sans font-bold text-[22px] sm:text-[24px] text-[#111] tracking-tight leading-tight">
-                {billboard.name}
+              <h1 className="font-sans font-bold text-[22px] sm:text-[24px] text-[#111] tracking-tight leading-tight flex items-center gap-2 flex-wrap">
+                <span>{billboard.name}</span>
+                <img 
+                  src="https://lh3.googleusercontent.com/d/1Iv2Cd9wwW7TjNeDF23qtsEQITRWqTq1z" 
+                  alt="Trusted Badge" 
+                  className="h-[1em] w-auto object-contain inline-block shrink-0 shadow-3xs rounded-[3px] align-middle" 
+                  referrerPolicy="no-referrer"
+                  title="Trusted Partner"
+                />
+                {billboard.verified && (
+                  <img 
+                    src="https://lh3.googleusercontent.com/d/1GmQEj8fuI11LJvJHqhYxeLXPLL0Si--i" 
+                    alt="Verified Logo" 
+                    className="h-[1em] w-auto object-contain inline-block shrink-0 shadow-3xs rounded-[3px] align-middle" 
+                    referrerPolicy="no-referrer"
+                    title="Verified Listing"
+                  />
+                )}
               </h1>
             </div>
 
@@ -164,17 +180,6 @@ export default function BillboardDetail({ billboard, onBack, onEnquire }: Billbo
                 {billboard.rating.toFixed(1)} <Star size={11} fill="white" stroke="white" className="ml-0.5" />
               </div>
               <span className="text-gray-500 font-semibold">{billboard.ratingsCount} Ratings</span>
-              
-              {/* Yellow Trust badge */}
-              <span className="inline-flex items-center gap-1 bg-[#ffc107]/10 text-[#d39e00] border border-[#ffc107]/20 px-2 py-0.5 rounded-[4px] text-[11px] font-bold">
-                <span className="bg-[#ffc107] text-white w-4 h-4 rounded-full flex items-center justify-center font-extrabold text-[10px] shadow-3xs">T</span>
-                Trust
-              </span>
-
-              {/* Blue Verified badge */}
-              <span className="inline-flex items-center gap-1 bg-[#0066cc]/10 text-[#0066cc] border border-[#0066cc]/20 px-2 py-0.5 rounded-[4px] text-[11px] font-bold">
-                <span className="font-extrabold text-[11px]">✓</span> Verified
-              </span>
 
               {/* Tag category badge */}
               <span className="bg-[#555555] text-white text-[10px] font-bold px-2 py-0.5 rounded-[4px] tracking-wide uppercase">
@@ -434,7 +439,10 @@ export default function BillboardDetail({ billboard, onBack, onEnquire }: Billbo
                   <p className="text-[11px] text-gray-400">Outdoor Advertising Campaign Specialists</p>
                 </div>
                 <div className="border-t border-gray-100 pt-2.5 text-xs text-gray-600 space-y-1.5">
-                  <p>🟢 Claimed & Verified Profile</p>
+                  <p className="flex items-center gap-1.5 font-semibold text-gray-800">
+                    <img src="https://lh3.googleusercontent.com/d/1GmQEj8fuI11LJvJHqhYxeLXPLL0Si--i" alt="Verified Logo" className="h-4 w-auto object-contain inline-block" referrerPolicy="no-referrer" />
+                    Claimed & Verified Profile
+                  </p>
                   <p>📊 High Conversion Analytics</p>
                 </div>
               </div>
@@ -501,9 +509,12 @@ export default function BillboardDetail({ billboard, onBack, onEnquire }: Billbo
               </div>
 
               <div className="space-y-4">
-                <div className="grid grid-cols-2 py-2.5 border-b border-gray-50">
+                <div className="grid grid-cols-2 py-2.5 border-b border-gray-50 items-center">
                   <span className="text-gray-400 font-medium">Verified Status</span>
-                  <span className="font-bold text-emerald-700">✓ Fully Verified Merchant</span>
+                  <span className="font-bold text-emerald-700 flex items-center gap-1.5">
+                    <img src="https://lh3.googleusercontent.com/d/1GmQEj8fuI11LJvJHqhYxeLXPLL0Si--i" alt="Verified Logo" className="h-5 w-auto object-contain inline-block" referrerPolicy="no-referrer" />
+                    Fully Verified Merchant
+                  </span>
                 </div>
                 <div className="grid grid-cols-2 py-2.5 border-b border-gray-50">
                   <span className="text-gray-400 font-medium">Primary Office Location</span>

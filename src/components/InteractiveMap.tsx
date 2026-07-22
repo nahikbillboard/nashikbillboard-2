@@ -358,8 +358,24 @@ export default function InteractiveMap({
                   <span className="text-xs text-slate-400 font-semibold">{activeBillboard.area}</span>
                 </div>
 
-                <h4 className="font-sans font-bold text-base text-white tracking-tight leading-snug">
-                  {activeBillboard.name}
+                <h4 className="font-sans font-bold text-base text-white tracking-tight leading-snug flex items-center gap-1.5 flex-wrap">
+                  <span>{activeBillboard.name}</span>
+                  <img 
+                    src="https://lh3.googleusercontent.com/d/1Iv2Cd9wwW7TjNeDF23qtsEQITRWqTq1z" 
+                    alt="Trusted Badge" 
+                    className="h-[1em] w-auto object-contain inline-block shrink-0 rounded-[2px]" 
+                    referrerPolicy="no-referrer"
+                    title="Trusted Partner"
+                  />
+                  {activeBillboard.verified && (
+                    <img 
+                      src="https://lh3.googleusercontent.com/d/1GmQEj8fuI11LJvJHqhYxeLXPLL0Si--i" 
+                      alt="Verified Logo" 
+                      className="h-[1em] w-auto object-contain inline-block shrink-0 rounded-[2px]" 
+                      referrerPolicy="no-referrer"
+                      title="Verified Listing"
+                    />
+                  )}
                 </h4>
 
                 <div className="flex items-center gap-2 mt-2">
