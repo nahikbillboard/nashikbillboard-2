@@ -363,7 +363,7 @@ export default function InteractiveMap({
                   <img 
                     src="https://lh3.googleusercontent.com/d/1Iv2Cd9wwW7TjNeDF23qtsEQITRWqTq1z" 
                     alt="Trusted Badge" 
-                    className="h-[1em] w-auto object-contain inline-block shrink-0 rounded-[2px]" 
+                    className="h-[1.5em] max-h-7 w-auto object-contain inline-block shrink-0 rounded-[2px]" 
                     referrerPolicy="no-referrer"
                     title="Trusted Partner"
                   />

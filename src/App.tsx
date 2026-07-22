@@ -717,26 +717,6 @@ export default function App() {
           <div id="directory-tab-view" className="space-y-6">
             {/* List block */}
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-sans font-extrabold text-xl text-gray-900 tracking-tight flex items-center gap-2">
-                    <Building2 className="text-indigo-600" size={18} />
-                    Verified Outdoor Advertising Vendors in Nashik
-                  </h3>
-                  <p className="text-xs text-gray-500">
-                    Displaying filtered agencies in <strong>{selectedArea}</strong> ({billboards.filter(b => selectedArea === 'All Areas' || b.area.toLowerCase() === selectedArea.toLowerCase()).length} listings).
-                  </p>
-                </div>
-                {selectedArea !== 'All Areas' && (
-                  <button 
-                    onClick={() => setSelectedArea('All Areas')}
-                    className="text-xs text-indigo-600 font-bold hover:underline"
-                  >
-                    Clear Area Filter
-                  </button>
-                )}
-              </div>
-
               {/* Directory listings cards with hoverable galleries */}
               <DirectoryListings 
                 billboards={filteredAndSortedBillboards}

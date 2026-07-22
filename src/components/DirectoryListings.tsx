@@ -224,7 +224,7 @@ export default function DirectoryListings({
                         <img 
                           src="https://lh3.googleusercontent.com/d/1Iv2Cd9wwW7TjNeDF23qtsEQITRWqTq1z" 
                           alt="Trusted Badge" 
-                          className="h-[1em] w-auto object-contain inline-block shrink-0 shadow-3xs rounded-[3px] align-middle" 
+                          className="h-[1.6em] max-h-8 w-auto object-contain inline-block shrink-0 shadow-3xs rounded-[3px] align-middle" 
                           referrerPolicy="no-referrer"
                           title="Trusted Partner"
                         />
